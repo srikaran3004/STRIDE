@@ -1,5 +1,5 @@
 """
-STRIDE LLM Service — Async Capgemini Generative Engine Client with Resilient Fallback
+STRIDE LLM Service — Async Company Gen_AI Engine Client with Resilient Fallback
 Precision Multi-Turn Conversation Memory, Ultra-Low Latency (< 1.5s) & Editorial Formatting
 """
 
@@ -16,13 +16,13 @@ logger = logging.getLogger("stride.llm")
 logging.basicConfig(level=logging.INFO)
 
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openai.generative.engine.capgemini.com/v1").rstrip("/")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openai.Gen_AI.engine.Company.com/v1").rstrip("/")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash-lite")
 
 PLACEHOLDER_KEYS = {
     "",
-    "your_capgemini_generative_engine_api_key_here",
+    "your_Company_Gen_AI_engine_api_key_here",
     "your_actual_key_here",
     "your_api_key_here"
 }
@@ -44,7 +44,7 @@ STRICT RULES:
 client = httpx.AsyncClient(timeout=10.0)
 
 async def resolve_available_model(api_key: str) -> str:
-    """Auto-detects the fastest, lowest-cost chat model from Capgemini Generative Engine."""
+    """Auto-detects the fastest, lowest-cost chat model from Company Gen_AI Engine."""
     global CACHED_MODEL_ID
     if CACHED_MODEL_ID:
         return CACHED_MODEL_ID
@@ -60,7 +60,7 @@ async def resolve_available_model(api_key: str) -> str:
             # 1. If configured model is in available, use it directly
             if configured in available:
                 CACHED_MODEL_ID = configured
-                logger.info(f"Using configured Capgemini model: {CACHED_MODEL_ID}")
+                logger.info(f"Using configured Company model: {CACHED_MODEL_ID}")
                 return CACHED_MODEL_ID
 
             # 2. Prefer fast, ultra-low-cost models from user catalog
@@ -386,7 +386,7 @@ async def query_llm_or_fallback(
     history: Optional[List[Dict[str, str]]] = None
 ) -> Tuple[str, str]:
     """
-    Executes fast Capgemini LLM inference with multi-turn conversation memory.
+    Executes fast Company LLM inference with multi-turn conversation memory.
     Deterministic fast-path for recognized intents (<1ms).
     """
     api_key = os.getenv("LLM_API_KEY", LLM_API_KEY).strip()
@@ -460,9 +460,9 @@ async def query_llm_or_fallback(
 
             return reply_md, voice_text
 
-        logger.warning(f"Capgemini LLM returned status {resp.status_code}: {resp.text}. Falling back.")
+        logger.warning(f"Company LLM returned status {resp.status_code}: {resp.text}. Falling back.")
         return generate_smart_fallback(query, context)
 
     except Exception as e:
-        logger.warning(f"Capgemini LLM call exception: {e}. Falling back safely.")
+        logger.warning(f"Company LLM call exception: {e}. Falling back safely.")
         return generate_smart_fallback(query, context)
